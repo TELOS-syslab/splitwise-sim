@@ -186,16 +186,14 @@ Similarly, we could run a simple Splitwise-HA configuration, which simulates KV-
 ```
 
 **NOTE**: Scripts must be run from the top-level directory.
+注意：脚本必须从顶层目录运行。
 
 Results will be generated in the `results/` directory according to the output path template specified by the `output_dir` field in [`config.yaml`](configs/config.yaml). Open [`notebooks/example.ipynb`](notebooks/example.ipynb) using Jupyter Notebook to see an example of how to easily extract the associated outputs.
-
-注意：脚本必须从顶层目录运行。
 结果会按照 config.yaml 中 output_dir 字段指定的输出路径模板生成在 results/ 目录中。在 Jupyter Notebook 中打开 notebooks/example.ipynb，查看提取输出的示例。
 
-## Request Traces
+## Request Traces 请求Trace
 
 SplitwiseSim expects request traces in a CSV file that contains the following fields for each request:
-请求跟踪
 SplitwiseSim 需要包含以下字段的 CSV 请求跟踪文件：
 
 - `request_id`: ID of the request, typically a monotonically increasing number.
@@ -219,11 +217,10 @@ Many of these fields have limited configurability at present. A typical new trac
 
 
 ### Production Traces and Trace Generation
-生产跟踪和跟踪生成
+生产Trace和Trace生成
 
 [Splitwise](#reference) was evaluated with request traces that were based off [production traces](https://github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2023.md) from LLM inference services at Microsoft Azure. The [`generate_trace.py`](generate_trace.py) script can automatically download the production traces and use the corresponding prompt/token size distributions to generate request traces with different request rates. It can also help generate custom traces with different kinds of distributions. Modify and run `generate_trace.py` with desired request rates and other parameters. By default, all generated traces are expected to reside in the `traces/` directory.
-
-Splitwise 的评估基于来自 Microsoft Azure LLM 推理服务的 生产跟踪。generate_trace.py 脚本可以自动下载这些生产跟踪，并使用相应的提示/输出 token 大小分布生成具有不同请求率的请求跟踪。它还可以帮助生成具有不同分布类型的自定义跟踪。修改 generate_trace.py 中的请求率和其他参数以生成不同的跟踪数据。默认情况下，生成的所有跟踪文件都保存在 traces/ 目录中。
+Splitwise 的评估基于来自 Microsoft Azure LLM 推理服务的 生产Trace。generate_trace.py 脚本可以自动下载这些生产Trace，并使用相应的提示/输出 token 大小分布生成具有不同请求率的请求Trace。它还可以帮助生成具有不同分布类型的自定义Trace。修改 generate_trace.py 中的请求率和其他参数以生成不同的跟踪数据。默认情况下，生成的所有Trace文件都保存在 traces/ 目录中。
 
 作用：这一部分允许用户使用真实生产数据或自定义生成的请求流量对模拟器进行负载测试，以便于评估模型在不同负载条件下的表现。
 
@@ -257,74 +254,73 @@ performance_model 估算请求在不同输入、输出、硬件、批量配置�
 
 1. `get_duration()`: used to estimate the runtime of prompt and token tasks.
 2. `get_iteration_duration()`: used to estimate the runtime of each batching iteration (e.g., from continuous batching).
-
-Since modern LLM serving typically uses [iteration-level scheduling](https://www.usenix.org/conference/osdi22/presentation/yu), we primarily rely on `get_iteration_duration` in the [Instance](instance.py) implementation (e.g., ORCAInstance and SplitwiseInstance).
-
-Currently, SplitwiseSim provides two concrete performance models:
-
-1. `performance_model=constant`: This model assumes that all prompt and token tasks take a constant duration. While unrealistic, it is helpful for testing / debugging purposes.
-2. `performance_model=db`: This model uses extensive profiling data from the DGX-A100 and DGX-H100 machines and is the preferable model to use for realistic simulations. The associated raw data can be found in [`data/perf-model.csv`](data/perf-model.csv). The `performance_model.DatabasePerformanceModel` class reads this raw data to build a simple linear predictor, which serves as the performance model. To extend SplitwiseSim to different LLMs/platforms, please add your profiling data to the data file and potentially update the performance model predictor.
-
-
-
 get_duration()：估算提示prompt和 token 任务的运行时间。
 get_iteration_duration()：估算每次批处理迭代的运行时间（例如，连续批处理时 from continuous batching）。
+
+Since modern LLM serving typically uses [iteration-level scheduling](https://www.usenix.org/conference/osdi22/presentation/yu), we primarily rely on `get_iteration_duration` in the [Instance](instance.py) implementation (e.g., ORCAInstance and SplitwiseInstance).
 现代 LLM 服务通常使用 iteration-level scheduling，因此在 Instance 实现中主要依赖 get_iteration_duration 函数（如在 ORCAInstance 和 SplitwiseInstance 中）。
 
+Currently, SplitwiseSim provides two concrete performance models:
 当前，SplitwiseSim 提供两个具体的性能模型：
 
+1. `performance_model=constant`: This model assumes that all prompt and token tasks take a constant duration. While unrealistic, it is helpful for testing / debugging purposes.
 performance_model=constant：假设所有提示和 token 任务的持续时间恒定，适用于测试/调试。
+
+2. `performance_model=db`: This model uses extensive profiling data from the DGX-A100 and DGX-H100 machines and is the preferable model to use for realistic simulations. The associated raw data can be found in [`data/perf-model.csv`](data/perf-model.csv). The `performance_model.DatabasePerformanceModel` class reads this raw data to build a simple linear predictor, which serves as the performance model. To extend SplitwiseSim to different LLMs/platforms, please add your profiling data to the data file and potentially update the performance model predictor.
 performance_model=db：利用 DGX-A100 和 DGX-H100 的配置数据，使用线性预测器作为性能模型。
 作用：此模块为不同硬件配置和模型提供灵活的时间估算，以便于用户在不同场景下优化 LLM 服务的延迟和吞吐量。
 
 
 
-## Experiments Workflow
+
+
+
+
+
+
+
+
+
+## Experiments Workflow 实验工作流
 
 This section describes how to run larger-scale simulations spanning a variety of configurations.
+这一部分描述了如何运行跨多种配置的大规模模拟。
 
-### Parallel Simulations
+### Parallel Simulations 并行模拟
+
 
 SplitwiseSim can be run on multiple cores (on one or more machines) to evaluate many different configurations in parallel. Each simulation configuration is run in a single process on a single core. SplitwiseSim uses [Ray](https://github.com/ray-project/ray) via the [Hydra Ray plugin](https://hydra.cc/docs/plugins/ray_launcher/) for parallelization.
+SplitwiseSim 可在多核（单机或多机）上运行，以并行评估多种配置。每个模拟配置在单核单进程中运行。SplitwiseSim 使用 Ray 及 Hydra Ray 插件 实现并行化。
 
 To start a Ray cluster, run:
+启动 Ray 集群的步骤：
 
 - `ray start --head` on the head machine.
 - `ray start --address=xxx` on each of the worker machines.
+在主节点运行：ray start --head
+在每个工作节点运行：ray start --address=xxx
 
 See [Ray docs](https://docs.ray.io/en/latest/cluster/vms/user-guides/launching-clusters/on-premises.html) for more details.
 
 If you do not want to use Ray, you may alternatively use the Hydra [joblib](https://hydra.cc/docs/plugins/joblib_launcher/) launcher, which only supports multicore parallelization on a single machine.
-
-Running a Hydra configuration in parallel requires the `--multirun` flag. For example, to sweep over multiple seed values in parallel, use `python --multirun run.py seed=0,1,2,3,4,5,6,7,8,9` after starting the Ray cluster.
-
-Output from multi-machine runs is stored on different machines corresponding to where each simulation configuration runs. Subsequently, you may need to manually collect results back into the same machine using sync scripts. Example sync scripts can be found in the `sync_scripts` folder.
-实验工作流
-这一部分描述了如何运行跨多种配置的大规模模拟。
-
-并行模拟
-SplitwiseSim 可在多核（单机或多机）上运行，以并行评估多种配置。每个模拟配置在单核单进程中运行。SplitwiseSim 使用 Ray 及 Hydra Ray 插件 实现并行化。
-
-启动 Ray 集群的步骤：
-
-在主节点运行：ray start --head
-在每个工作节点运行：ray start --address=xxx
 如果不希望使用 Ray，可以使用 Hydra 的 joblib 启动器，仅支持单机多核并行。
 
+Running a Hydra configuration in parallel requires the `--multirun` flag. For example, to sweep over multiple seed values in parallel, use `python --multirun run.py seed=0,1,2,3,4,5,6,7,8,9` after starting the Ray cluster.
 要并行运行 Hydra 配置，需使用 --multirun 标志。例如，启动 Ray 集群后可运行：python --multirun run.py seed=0,1,2,3,4,5,6,7,8,9。
 
+Output from multi-machine runs is stored on different machines corresponding to where each simulation configuration runs. Subsequently, you may need to manually collect results back into the same machine using sync scripts. Example sync scripts can be found in the `sync_scripts` folder.
 作用：并行化支持更大规模的模拟，使用户能够在不同配置下高效地评估集群表现。
 
 
 
-### Experiment Runs
+### Experiment Runs 实验运行
 
 The `scripts/` directory provides several scripts to run larger experiments, including parallel sweeps over different cluster configurations:
 
 - To run a baseline configuration, run `./scripts/run_baseline_a.sh` (Baseline-A100) or `./scripts/run_baseline_h.sh` (Baseline-H100).
 - To run a Splitwise configuration, run the appropriate Splitwise-XX file under the scripts directory. For example, to run Splitwise-HA, run `./scripts/run_splitwise_ha.sh`.
 - Various experiment configurations used in the [Splitwise paper](#reference) are specified in the `configs/experiment/` folder. For example, to run a sweep of iso-cost clusters, you can run `./scripts/run_isocost.sh` which corresponds to `configs/experiment/*_isocost.yaml` with the appropriate sweep parameters (warning: running this may spin up many configurations in parallel and take a long time; try smaller configurations to begin with).
-实验运行
+
 scripts/ 目录中提供了多个脚本用于运行大规模实验，包括并行的集群配置遍历：
 
 运行基线配置：./scripts/run_baseline_a.sh（Baseline-A100）或 ./scripts/run_baseline_h.sh（Baseline-H100）。

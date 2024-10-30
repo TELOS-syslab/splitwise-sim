@@ -18,7 +18,7 @@ from trace import Trace
 
 
 def init_trace(cfg):
-    cfg.trace.path = 'traces/rr_conv_80.csv' # 修改 cfg.trace.path 的值 fth
+    # cfg.trace.path = 'traces/rr_conv_80.csv' # 修改 cfg.trace.path 的值 fth
     trace_path = os.path.join(get_original_cwd(), cfg.trace.path)
     
     # 分别打印 get_original_cwd() 和 cfg.trace.path

@@ -185,6 +185,8 @@ Results will be generated in the `results/` directory according to the output pa
 
 ## Request Traces 请求Trace
 
+
+
 SplitwiseSim expects request traces in a CSV file that contains the following fields for each request:
 SplitwiseSim 需要包含以下字段的 CSV 请求Trace文件：
 
@@ -210,6 +212,10 @@ Many of these fields have limited configurability at present. A typical new trac
 
 ### Production Traces and Trace Generation
 生产Trace和Trace生成
+
+'''
+python generate_traces.py
+'''
 
 [Splitwise](#reference) was evaluated with request traces that were based off [production traces](https://github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2023.md) from LLM inference services at Microsoft Azure. The [`generate_trace.py`](generate_trace.py) script can automatically download the production traces and use the corresponding prompt/token size distributions to generate request traces with different request rates. It can also help generate custom traces with different kinds of distributions. Modify and run `generate_trace.py` with desired request rates and other parameters. By default, all generated traces are expected to reside in the `traces/` directory.
 Splitwise 的评估基于来自 Microsoft Azure LLM 推理服务的 生产Trace。generate_trace.py 脚本可以自动下载这些生产Trace，并使用相应的提示/输出 token 大小分布生成具有不同请求率的请求Trace。它还可以帮助生成具有不同分布类型的自定义Trace。修改 generate_trace.py 中的请求率和其他参数以生成不同的跟踪数据。默认情况下，生成的所有Trace文件都保存在 traces/ 目录中。

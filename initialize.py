@@ -18,7 +18,16 @@ from trace import Trace
 
 
 def init_trace(cfg):
+    cfg.trace.path = 'traces/rr_conv_80.csv' # 修改 cfg.trace.path 的值 fth
     trace_path = os.path.join(get_original_cwd(), cfg.trace.path)
+    
+    # 分别打印 get_original_cwd() 和 cfg.trace.path
+    print(f">>Original working directory: {get_original_cwd()}")
+    
+    print(f">>Config trace path: {cfg.trace.path}")
+    
+    print(f">>Loading CSV from path: {trace_path}")  # 打印完整文件路径
+    
     trace = Trace.from_csv(trace_path)
     return trace
 

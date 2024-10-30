@@ -90,6 +90,7 @@ The simplest way to run SplitwiseSim is to execute [`run.py`](run.py), which run
 
 ```bash
 # scripts/run_baseline_h_example.sh
+# ./scripts/run_baseline_h_example.sh
 
 SCHEDULER=token_jsq
 NUM_DGX_A100=0
@@ -162,15 +163,6 @@ To simulate this simple Baseline-H100 configuration with a single DGX-H100 on [`
 为了使用单个 DGX-H100 服务器配置简单的 Baseline-H100 模型模拟，并以 test_trace.csv 作为请求跟踪文件，我们可以直接运行以下 bash 脚本：
 
 
-
-
-
-
-
-
-
-
-
 ```bash
 # run simple Baseline-H100 example  运行单个 DGX-H100 上的简单 Baseline-H100 配置示例：
 ./scripts/run_baseline_h_example.sh
@@ -194,7 +186,7 @@ Results will be generated in the `results/` directory according to the output pa
 ## Request Traces 请求Trace
 
 SplitwiseSim expects request traces in a CSV file that contains the following fields for each request:
-SplitwiseSim 需要包含以下字段的 CSV 请求跟踪文件：
+SplitwiseSim 需要包含以下字段的 CSV 请求Trace文件：
 
 - `request_id`: ID of the request, typically a monotonically increasing number.
 - `request_type`: Type of the request (e.g., DL inference, LLM inference, etc.). Use `2` for generative LLM inference, which is the only supported type at present.
@@ -309,6 +301,8 @@ Running a Hydra configuration in parallel requires the `--multirun` flag. For ex
 要并行运行 Hydra 配置，需使用 --multirun 标志。例如，启动 Ray 集群后可运行：python --multirun run.py seed=0,1,2,3,4,5,6,7,8,9。
 
 Output from multi-machine runs is stored on different machines corresponding to where each simulation configuration runs. Subsequently, you may need to manually collect results back into the same machine using sync scripts. Example sync scripts can be found in the `sync_scripts` folder.
+多机器运行的输出存储在不同的机器上，对应于每个模拟配置运行的位置。随后，您可能需要使用同步脚本手动将结果收集回同一台机器中。示例同步脚本可以在`sync_shorits`文件夹中找到。
+
 作用：并行化支持更大规模的模拟，使用户能够在不同配置下高效地评估集群表现。
 
 
@@ -316,16 +310,18 @@ Output from multi-machine runs is stored on different machines corresponding to 
 ### Experiment Runs 实验运行
 
 The `scripts/` directory provides several scripts to run larger experiments, including parallel sweeps over different cluster configurations:
-
-- To run a baseline configuration, run `./scripts/run_baseline_a.sh` (Baseline-A100) or `./scripts/run_baseline_h.sh` (Baseline-H100).
-- To run a Splitwise configuration, run the appropriate Splitwise-XX file under the scripts directory. For example, to run Splitwise-HA, run `./scripts/run_splitwise_ha.sh`.
-- Various experiment configurations used in the [Splitwise paper](#reference) are specified in the `configs/experiment/` folder. For example, to run a sweep of iso-cost clusters, you can run `./scripts/run_isocost.sh` which corresponds to `configs/experiment/*_isocost.yaml` with the appropriate sweep parameters (warning: running this may spin up many configurations in parallel and take a long time; try smaller configurations to begin with).
-
 scripts/ 目录中提供了多个脚本用于运行大规模实验，包括并行的集群配置遍历：
 
+- To run a baseline configuration, run `./scripts/run_baseline_a.sh` (Baseline-A100) or `./scripts/run_baseline_h.sh` (Baseline-H100).
 运行基线配置：./scripts/run_baseline_a.sh（Baseline-A100）或 ./scripts/run_baseline_h.sh（Baseline-H100）。
+
+- To run a Splitwise configuration, run the appropriate Splitwise-XX file under the scripts directory. For example, to run Splitwise-HA, run `./scripts/run_splitwise_ha.sh`.
 运行 Splitwise 配置：运行对应的 Splitwise-XX 脚本，例如 ./scripts/run_splitwise_ha.sh 可运行 Splitwise-HA。
-configs/experiment/ 文件夹中指定了多个实验配置，用于 Splitwise 论文 中的实验。
+
+- Various experiment configurations used in the [Splitwise paper](#reference) are specified in the `configs/experiment/` folder. For example, to run a sweep of iso-cost clusters, you can run `./scripts/run_isocost.sh` which corresponds to `configs/experiment/*_isocost.yaml` with the appropriate sweep parameters (warning: running this may spin up many configurations in parallel and take a long time; try smaller configurations to begin with).
+在 configs/experiment/ 文件夹中指定了 Splitwise 论文 中使用的各种实验配置。例如，要运行等成本（iso-cost）集群的遍历（sweep），可以执行 ./scripts/run_isocost.sh，该脚本对应 configs/experiment/*_isocost.yaml 中的合适遍历参数。（注意：运行此脚本可能会同时启动许多配置，并且可能需要较长时间；建议从较小的配置开始。）
+
+
 作用：实验脚本简化了复杂实验的启动，使用户可以快速测试不同集群配置。
 
 

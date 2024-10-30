@@ -16,5 +16,6 @@ class Trace():
 
     @classmethod
     def from_csv(cls, path):
+        print(f">>>Loading CSV from path: {path}")  # 打印文件路径
         df = pd.read_csv(path)
         return Trace(df)
